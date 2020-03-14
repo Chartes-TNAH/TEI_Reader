@@ -1,7 +1,7 @@
 from lxml import etree
 ns = {'tei' : 'http://www.tei-c.org/ns/1.0'}
 doc = etree.parse("data/Racine.xml")
-
+'''
 auteur = doc.xpath('//tei:author/text()', namespaces=ns)
 auteur = auteur[0]
 print("L'auteur est " + auteur)
@@ -13,5 +13,61 @@ print("Le titre est " + titre)
 perss = doc.xpath('//tei:castItem/text()', namespaces=ns)
 for pers in perss :
     print(pers)
+
+perso = doc.xpath('//tei:reg/tei:persName', namespaces=ns)
+for persos in perso:
+    print(persos.getparent().getparent().getparent().get("n"))
+
+#toujours répéter le ns, même à l'intérieur du chemin xpath
+#pour avoir les parents : getparent() et les valeurs d'attributs c'est .get
+
+def index_personnages(doc):
+    index = {}
+    personnages = doc.xpath('//tei:reg/tei:persName', namespaces=ns)
+    for personnage in personnages :
+        nom = personnage.text
+        reg = personnage.getparent()
+        choice = reg.getparent()
+        ligne = choice.getparent()
+        numero_ligne = ligne.get("n")
+
+        if nom not in index :
+            index[nom] = []
+
+        index[nom].append(numero_ligne)
+
+    return index
+
+print(index_personnages(doc)) #FUUUUCK'''
+
+def index_personnages2(doc):
+    index = {}
+    lignes = doc.xpath('//tei:body//tei:l[@*]', namespaces=ns)
+    #ne prend en compte que les l descendants de body et ayant un attribut
+    ligne_precedente = None
+    for ligne in lignes:
+        if ligne.get("n") :
+            numero_de_ligne = ligne.get("n")
+        else:
+            numero_de_ligne = ligne_precedente
+
+        noms = ligne.xpath('.//tei:reg/tei:persName/text()', namespaces=ns)
+
+        for nom in noms:
+            if nom not in index:
+                index[nom] = []
+
+            index[nom].append(numero_de_ligne)
+
+        ligne_precedente = numero_de_ligne
+    return index
+
+print(index_personnages2(doc))
+
+
+
+
+
+
 
 
