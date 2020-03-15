@@ -38,9 +38,10 @@ def index_personnages(doc):
 
     return index
 
-print(index_personnages(doc)) #FUUUUCK'''
+print(index_personnages(doc))'''
 
 def index_personnages2(doc):
+    #fonction qui permet d'avoir un index des personnages (nom + lignes) sous forme de dictionnaire
     index = {}
     lignes = doc.xpath('//tei:body//tei:l[@*]', namespaces=ns)
     #ne prend en compte que les l descendants de body et ayant un attribut
@@ -51,18 +52,41 @@ def index_personnages2(doc):
         else:
             numero_de_ligne = ligne_precedente
 
-        noms = ligne.xpath('.//tei:reg/tei:persName/text()', namespaces=ns)
+        noms_pers = ligne.xpath('.//tei:reg/tei:persName/text()', namespaces=ns)
 
-        for nom in noms:
-            if nom not in index:
-                index[nom] = []
+        for nom_pers in noms_pers:
+            if nom_pers not in index:
+                index[nom_pers] = []
 
-            index[nom].append(numero_de_ligne)
+            index[nom_pers].append(numero_de_ligne)
 
         ligne_precedente = numero_de_ligne
     return index
-
 print(index_personnages2(doc))
+
+def index_lieux(doc):
+    #fonction qui permet d'avoir un index des lieux (nom + lignes) sous forme de dictionnaire
+    index = {}
+    lignes = doc.xpath('//tei:body//tei:l[@*]', namespaces=ns)
+    #ne prend en compte que les l descendants de body et ayant un attribut
+    ligne_precedente = None
+    for ligne in lignes:
+        if ligne.get("n") :
+            numero_de_ligne = ligne.get("n")
+        else:
+            numero_de_ligne = ligne_precedente
+
+        noms_lieux = ligne.xpath('.//tei:reg/tei:placeName/text()', namespaces=ns)
+
+        for nom_lieu in noms_lieux:
+            if nom_lieu not in index:
+                index[nom_lieu] = []
+
+            index[nom_lieu].append(numero_de_ligne)
+
+        ligne_precedente = numero_de_ligne
+    return index
+print(index_lieux(doc))
 
 
 
