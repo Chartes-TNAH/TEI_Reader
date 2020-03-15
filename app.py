@@ -16,7 +16,7 @@ for pers in perss :
 
 perso = doc.xpath('//tei:reg/tei:persName', namespaces=ns)
 for persos in perso:
-    print(persos.getparent().getparent().getparent().get("n"))
+    print(persos.getparent().getparent().getparent().get("n"))'''
 
 #toujours répéter le ns, même à l'intérieur du chemin xpath
 #pour avoir les parents : getparent() et les valeurs d'attributs c'est .get
@@ -38,7 +38,7 @@ def index_personnages(doc):
 
     return index
 
-print(index_personnages(doc))'''
+print(index_personnages(doc))
 
 def index_personnages2(doc):
     #fonction qui permet d'avoir un index des personnages (nom + lignes) sous forme de dictionnaire
@@ -47,7 +47,7 @@ def index_personnages2(doc):
     #ne prend en compte que les l descendants de body et ayant un attribut
     ligne_precedente = None
     for ligne in lignes:
-        if ligne.get("n") :
+        if ligne.get("n"):
             numero_de_ligne = ligne.get("n")
         else:
             numero_de_ligne = ligne_precedente
@@ -71,7 +71,7 @@ def index_lieux(doc):
     #ne prend en compte que les l descendants de body et ayant un attribut
     ligne_precedente = None
     for ligne in lignes:
-        if ligne.get("n") :
+        if ligne.get("n"):
             numero_de_ligne = ligne.get("n")
         else:
             numero_de_ligne = ligne_precedente
@@ -87,6 +87,26 @@ def index_lieux(doc):
         ligne_precedente = numero_de_ligne
     return index
 print(index_lieux(doc))
+
+#Table des matières :
+
+def table_des_matieres(doc):
+    index = {}
+    divs = doc.xpath('//tei:div', namespaces=ns)
+
+    for div in divs:
+        if div.get("type"):
+            division = div.get("type")
+
+        titres = div.xpath('.//tei:head', namespaces=ns)
+
+        for titre in titres:
+            if titre not in index:
+                index[titre] = []
+            index[titre].append(division)
+
+    return index
+print(table_des_matieres(doc))
 
 
 
