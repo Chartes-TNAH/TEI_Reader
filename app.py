@@ -1,4 +1,6 @@
 from lxml import etree
+from flask import Flask, render_template
+
 ns = {'tei' : 'http://www.tei-c.org/ns/1.0'}
 doc = etree.parse("data/Racine.xml")
 '''
@@ -16,7 +18,7 @@ for pers in perss :
 
 perso = doc.xpath('//tei:reg/tei:persName', namespaces=ns)
 for persos in perso:
-    print(persos.getparent().getparent().getparent().get("n"))'''
+    print(persos.getparent().getparent().getparent().get("n"))
 
 #toujours répéter le ns, même à l'intérieur du chemin xpath
 #pour avoir les parents : getparent() et les valeurs d'attributs c'est .get
@@ -38,7 +40,7 @@ def index_personnages(doc):
 
     return index
 
-print(index_personnages(doc))
+print(index_personnages(doc))'''
 
 def index_personnages2(doc):
     #fonction qui permet d'avoir un index des personnages (nom + lignes) sous forme de dictionnaire
@@ -88,27 +90,45 @@ def index_lieux(doc):
     return index
 print(index_lieux(doc))
 
+
 #Table des matières :
 
 def table_des_matieres(doc):
-    index = {}
-    divs = doc.xpath('//tei:div', namespaces=ns)
+    actes = doc.xpath("//tei:div[@type='act']", namespaces=ns)
+    tdm = []
 
-    for div in divs:
-        if div.get("type"):
-            division = div.get("type")
+    for acte in actes:
+        titre_acte = acte.xpath('./tei:head/text()', namespaces=ns)
 
-        titres = div.xpath('.//tei:head', namespaces=ns)
+        scenes = acte.xpath('./tei:div[@type="scene"]', namespaces=ns)
 
-        for titre in titres:
-            if titre not in index:
-                index[titre] = []
-            index[titre].append(division)
+        tdm_scene = []
+        for scene in scenes:
+            titre_scene = scene.xpath('./tei:head/text()', namespaces=ns)
+            speaker = set(scene.xpath('.//tei:speaker/text()', namespaces=ns))
+            tdm_scene.append({
+                "Titre": titre_scene,
+                "Personnages": speaker
+            })
 
-    return index
+        tdm.append({
+            "Titre": titre_acte,
+            "Scènes": tdm_scene
+        })
+
+    return tdm
 print(table_des_matieres(doc))
 
 
+app = Flask("Application")
+
+
+@app.route("/")
+def accueil():
+    return render_template("Accueil.html", table=table_des_matieres(doc))
+
+if __name__ == "__main__":
+    app.run()
 
 
 
