@@ -2,7 +2,7 @@ from lxml import etree
 from flask import Flask, render_template
 
 ns = {'tei' : 'http://www.tei-c.org/ns/1.0'}
-doc = etree.parse("data/Racine.xml")
+doc = etree.parse("data/Moliere1669_GeorgeDandin_btv1b8610793w_cropped_numb.xml")
 '''
 auteur = doc.xpath('//tei:author/text()', namespaces=ns)
 auteur = auteur[0]
@@ -98,13 +98,13 @@ def table_des_matieres(doc):
     tdm = []
 
     for acte in actes:
-        titre_acte = acte.xpath('./tei:head/text()', namespaces=ns)
-
-        scenes = acte.xpath('./tei:div[@type="scene"]', namespaces=ns)
+        titre_acte = acte.xpath('./tei:head/text()', namespaces=ns)[0]
+         #Pour qu'il ne m'envoie pas une liste mais uniquement le premier élément, même chose pour les scènes
+        scenes = acte.xpath('./tei:div', namespaces=ns)
 
         tdm_scene = []
         for scene in scenes:
-            titre_scene = scene.xpath('./tei:head/text()', namespaces=ns)
+            titre_scene = scene.xpath('./tei:head/text()', namespaces=ns)[0]
             speaker = set(scene.xpath('.//tei:speaker/text()', namespaces=ns))
             tdm_scene.append({
                 "Titre": titre_scene,
@@ -121,11 +121,16 @@ print(table_des_matieres(doc))
 
 
 app = Flask("Application")
-
+app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 @app.route("/")
 def accueil():
     return render_template("Accueil.html", table=table_des_matieres(doc))
+
+@app.route("/Table")
+def table_matieres():
+    return render_template("Table_matieres.html", table=table_des_matieres(doc))
+
 
 if __name__ == "__main__":
     app.run()

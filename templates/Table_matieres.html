@@ -1,0 +1,30 @@
+<html>
+
+<head>
+    <title>
+        Table des matières
+    </title>
+</head>
+
+<body>
+    <ul>
+        {% for acte in table %}
+        <li>{{ acte.Titre }}
+            <ul>
+                {% for scene in acte.Scènes %}
+                <li>{{ scene.Titre }}
+                    <p>
+                        {% for personnage in scene.Personnages %}
+                        {{personnage}}
+                        {% endfor %}
+                    </p>
+                </li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endfor %}
+
+    </ul>
+</body>
+
+</html>
