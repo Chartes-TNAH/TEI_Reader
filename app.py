@@ -1,54 +1,30 @@
+# lxml est la librairie permettant de traiter du XML en python
 from lxml import etree
+
+# Flask permettra d'afficher les résultats sur une page html
 from flask import Flask, render_template
 
-ns = {'tei' : 'http://www.tei-c.org/ns/1.0'}
-doc = etree.parse("data/Moliere1669_GeorgeDandin_btv1b8610793w_cropped_numb.xml")
-'''
-auteur = doc.xpath('//tei:author/text()', namespaces=ns)
-auteur = auteur[0]
-print("L'auteur est " + auteur)
+# Dès qu'on utilise du XPath, il est nécessaire de préciser le namespace, on le met donc dans une variable
+ns = {'tei': 'http://www.tei-c.org/ns/1.0'}
 
-titre = doc.xpath('//tei:title/text()', namespaces=ns)
-titre = titre[0]
-print("Le titre est " + titre)
-
-perss = doc.xpath('//tei:castItem/text()', namespaces=ns)
-for pers in perss :
-    print(pers)
-
-perso = doc.xpath('//tei:reg/tei:persName', namespaces=ns)
-for persos in perso:
-    print(persos.getparent().getparent().getparent().get("n"))
-
-#toujours répéter le ns, même à l'intérieur du chemin xpath
-#pour avoir les parents : getparent() et les valeurs d'attributs c'est .get
 
 def index_personnages(doc):
+    """ Fonction qui permet d'obtenir un index des personnages
+
+    :param doc: un document XML donné en entrée
+    :return: un dictionnaire ayant pour clefs les noms de personnages et pour valeurs une liste avec les occurences
+    de chaque personnage
+    :rtype: dict
+    """
     index = {}
-    personnages = doc.xpath('//tei:reg/tei:persName', namespaces=ns)
-    for personnage in personnages :
-        nom = personnage.text
-        reg = personnage.getparent()
-        choice = reg.getparent()
-        ligne = choice.getparent()
-        numero_ligne = ligne.get("n")
-
-        if nom not in index :
-            index[nom] = []
-
-        index[nom].append(numero_ligne)
-
-    return index
-
-print(index_personnages(doc))'''
-
-def index_personnages2(doc):
-    #fonction qui permet d'avoir un index des personnages (nom + lignes) sous forme de dictionnaire
-    index = {}
+    # On ne prend en compte que les l descendants de body et ayant un attribut
     lignes = doc.xpath('//tei:body//tei:l[@*]', namespaces=ns)
-    #ne prend en compte que les l descendants de body et ayant un attribut
+
     ligne_precedente = None
     for ligne in lignes:
+            # Pour chaque ligne dotée d'un attribut 'n', on récupère sa valeur. Ce if est nécessaire puisque certaine
+            # ligne, notamment les stichomyties, ont uniquement un attribut 'part' : on récupère donc le numéro de
+            # la ligne précédente.
         if ligne.get("n"):
             numero_de_ligne = ligne.get("n")
         else:
@@ -56,6 +32,7 @@ def index_personnages2(doc):
 
         noms_pers = ligne.xpath('.//tei:reg/tei:persName/text()', namespaces=ns)
 
+        # On récupère ensuite pour chacune de ses lignes le nom du personnage associé, via l'élément 'persName'
         for nom_pers in noms_pers:
             if nom_pers not in index:
                 index[nom_pers] = []
@@ -64,15 +41,25 @@ def index_personnages2(doc):
 
         ligne_precedente = numero_de_ligne
     return index
-print(index_personnages2(doc))
+
 
 def index_lieux(doc):
-    #fonction qui permet d'avoir un index des lieux (nom + lignes) sous forme de dictionnaire
+    """ Fonction qui permet d'obtenir un index des lieux
+
+       :param doc: un document XML donné en entrée
+       :return: un dictionnaire ayant pour clefs les noms de lieux et pour valeurs une liste avec les occurences
+       de chaque lieu
+       :rtype: dict
+       """
     index = {}
+    # On ne prend en compte que les l descendants de body et ayant un attribut, quel qu'il soit puisque seuls les
+    # éléments 'l' du 'body' ont un attribut.
     lignes = doc.xpath('//tei:body//tei:l[@*]', namespaces=ns)
-    #ne prend en compte que les l descendants de body et ayant un attribut
+
     ligne_precedente = None
     for ligne in lignes:
+            # Il s'agit ici du même code que la fonction index_personnages puisque l'on peut rencontrer les mêmes
+            # problèmes de lignes déjà expliqués.
         if ligne.get("n"):
             numero_de_ligne = ligne.get("n")
         else:
@@ -80,6 +67,7 @@ def index_lieux(doc):
 
         noms_lieux = ligne.xpath('.//tei:reg/tei:placeName/text()', namespaces=ns)
 
+        # On récupère ensuite pour chacune de ses lignes le nom du lieu associé, via l'élément 'placeName'
         for nom_lieu in noms_lieux:
             if nom_lieu not in index:
                 index[nom_lieu] = []
@@ -88,55 +76,64 @@ def index_lieux(doc):
 
         ligne_precedente = numero_de_ligne
     return index
-print(index_lieux(doc))
 
-
-#Table des matières :
 
 def table_des_matieres(doc):
+    """ Fonction qui permet d'obtenir une table des matières de chaque document
+
+       :param doc: un document XML donné en entrée
+       :return: une liste de dictionnaires, il y a un dictionnaire par acte. Les scènes sont elles-mêmes comprises
+       dans une liste de dictionnaires qui a pour clefs 'Titre' et 'Personnages'.
+       :rtype: list
+       """
     actes = doc.xpath("//tei:div[@type='act']", namespaces=ns)
     tdm = []
 
     for acte in actes:
+        # Pour ne pas obtenir de liste mais uniquement le premier élément de la liste, même chose pour les scènes
         titre_acte = acte.xpath('./tei:head/text()', namespaces=ns)[0]
-         #Pour qu'il ne m'envoie pas une liste mais uniquement le premier élément, même chose pour les scènes
+        # Le corpus ne permet pas de préciser l'attribut de l'élément 'div' (@type="scene") puisque tous les fichiers du
+        # corpus n'en ont pas. On suppose donc que chaque 'div' qui suit une 'div[@type="act"]' est une scène
         scenes = acte.xpath('./tei:div', namespaces=ns)
 
         tdm_scene = []
+            # On récupère tous les speaker puis on utilise le type set() pour n'en garder qu'un. Cette méthode m'a paru
+            # être la meilleure puisque lorsque la scène est un monologue, il n'y a pas d'éléments 'stage' or l'élément
+            # 'speaker' est présent quel que soit le nombre de personnage(s).
         for scene in scenes:
             titre_scene = scene.xpath('./tei:head/text()', namespaces=ns)[0]
             speaker = set(scene.xpath('.//tei:speaker/text()', namespaces=ns))
+
+            # Pour chaque scène, on stocke dans un dictionnaire le titre (clef 1) et les personnages (clef 2).
             tdm_scene.append({
                 "Titre": titre_scene,
                 "Personnages": speaker
             })
 
+        # Pour chaque acte, on stocke dans un dictionnaire le titre (clef 1) et la liste des scènes précedemment
+        # constituée
         tdm.append({
             "Titre": titre_acte,
             "Scènes": tdm_scene
         })
 
     return tdm
-print(table_des_matieres(doc))
-
 
 app = Flask("Application")
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-@app.route("/")
-def accueil():
-    return render_template("Accueil.html", table=table_des_matieres(doc))
 
-@app.route("/Table")
-def table_matieres():
+@app.route("/<document>/Accueil")
+def accueil(document):
+    doc = etree.parse("data/" + document)
+    return render_template("Accueil.html")
+
+
+@app.route("/<document>/Table_des_matieres")
+def table_matieres(document):
+    doc = etree.parse("data/" + document)
     return render_template("Table_matieres.html", table=table_des_matieres(doc))
 
 
 if __name__ == "__main__":
     app.run()
-
-
-
-
-
-
