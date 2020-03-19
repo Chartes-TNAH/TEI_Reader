@@ -5,6 +5,12 @@
     <title>Index des lieux</title>
 </head>
 <body>
-
+<ul>
+    {% for lieu, numero in index.items() %}
+    <li>
+        {{ lieu }} : {{ numero|join(", ") }}
+    </li>
+    {% endfor %}
+</ul>
 </body>
 </html>

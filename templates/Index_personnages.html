@@ -5,6 +5,12 @@
     <title>Index des personnages</title>
 </head>
 <body>
-
+<ul>
+    {% for personnage, numero in index.items() %}
+    <li>
+        {{ personnage }} : {{ numero|join(", ") }}
+    </li>
+    {% endfor %}
+</ul>
 </body>
 </html>

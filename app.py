@@ -58,8 +58,8 @@ def index_lieux(doc):
 
     ligne_precedente = None
     for ligne in lignes:
-            # Il s'agit ici du même code que la fonction index_personnages puisque l'on peut rencontrer les mêmes
-            # problèmes de lignes déjà expliqués.
+        # Il s'agit ici du même code que la fonction index_personnages puisque l'on peut rencontrer les mêmes
+         # problèmes de lignes déjà expliqués.
         if ligne.get("n"):
             numero_de_ligne = ligne.get("n")
         else:
@@ -97,9 +97,9 @@ def table_des_matieres(doc):
         scenes = acte.xpath('./tei:div', namespaces=ns)
 
         tdm_scene = []
-            # On récupère tous les speaker puis on utilise le type set() pour n'en garder qu'un. Cette méthode m'a paru
-            # être la meilleure puisque lorsque la scène est un monologue, il n'y a pas d'éléments 'stage' or l'élément
-            # 'speaker' est présent quel que soit le nombre de personnage(s).
+        # On récupère tous les speaker puis on utilise le type set() pour n'en garder qu'un. Cette méthode m'a paru
+        # être la meilleure puisque lorsque la scène est un monologue, il n'y a pas d'éléments 'stage' or l'élément
+        # 'speaker' est présent quel que soit le nombre de personnage(s).
         for scene in scenes:
             titre_scene = scene.xpath('./tei:head/text()', namespaces=ns)[0]
             speaker = set(scene.xpath('.//tei:speaker/text()', namespaces=ns))
@@ -119,6 +119,18 @@ def table_des_matieres(doc):
 
     return tdm
 
+def presenter(doc):
+    titre = doc.xpath('//tei:titleStmt/tei:title/text()', namespaces=ns)[0]
+    auteur = doc.xpath('//tei:titleStmt/tei:author/text()', namespaces=ns)[0]
+    editeur = doc.xpath('//tei:titleStmt/tei:editor/text()', namespaces=ns)[0]
+
+    return {
+        "Titre": titre,
+        "Auteur": auteur,
+        "Éditeur": editeur
+    }
+
+
 app = Flask("Application")
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
@@ -134,6 +146,20 @@ def table_matieres(document):
     doc = etree.parse("data/" + document)
     return render_template("Table_matieres.html", table=table_des_matieres(doc))
 
+@app.route("/<document>/Index_lieux")
+def index_des_lieux(document):
+    doc = etree.parse("data/" + document)
+    return render_template("Index_lieux.html", index=index_lieux(doc))
+
+@app.route("/<document>/Index_personnages")
+def index_des_personnages(document):
+    doc = etree.parse("data/" + document)
+    return render_template("Index_personnages.html", index=index_personnages(doc))
+
+@app.route("/<document>/Presentation")
+def presentation(document):
+    doc = etree.parse("data/" + document)
+    return render_template("Presentation.html", infos=presenter(doc))
 
 if __name__ == "__main__":
     app.run()
