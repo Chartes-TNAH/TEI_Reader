@@ -5,9 +5,25 @@
     <title>Présentation</title>
 </head>
 <body>
-<p>Page qui présentera chaque pièce en récupérant les infos dans le fichier directement</p>
-<p>Le titre est {{ infos.Titre }}</p>
-<p>L'auteur est {{ infos.Auteur }}</p>
-<p>L'éditeur est {{ infos.Éditeur }}</p>
+<h1>Présentation de {{ infos.Titre}} de {{ infos.Auteur }}</h1>
+
+<p>
+    {{ infos.Titre }}, oeuvre de {{ infos.Auteur }} a été publiée en {{ infos.Date }} à {{ infos.Ville }} par
+    {{ infos.Editeur_papier }}.
+</p>
+<p>
+    Elle est composée de {{ infos.Lignes }} lignes.
+</p>
+<p>
+    Les personnages de cette pièce sont :
+    <ul>
+    {% for personnage in infos.Personnages %}
+    <li>
+        {{ personnage }}
+    </li>
+    {% endfor %}
+</ul>
+
+</p>
 </body>
 </html>

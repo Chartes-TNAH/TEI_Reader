@@ -5,6 +5,8 @@ from lxml import etree
 from flask import Flask, render_template
 
 # Dès qu'on utilise du XPath, il est nécessaire de préciser le namespace, on le met donc dans une variable
+from lxml.etree import strip_elements
+
 ns = {'tei': 'http://www.tei-c.org/ns/1.0'}
 
 
@@ -119,16 +121,52 @@ def table_des_matieres(doc):
 
     return tdm
 
+def remove_element(el):
+    """
+    Fonction qui permet de supprimer un élément dans l'arbre XML sans supprimer pour autant le texte qui suit
+    :param el: un élément xml
+    """
+    parent = el.getparent()
+    if el.tail.strip():
+        prev = el.getprevious()
+        if prev:
+            prev.tail = (prev.tail or '') + el.tail
+        else:
+            parent.text = (parent.text or '') + el.tail
+    parent.remove(el)
+
 def presenter(doc):
     titre = doc.xpath('//tei:titleStmt/tei:title/text()', namespaces=ns)[0]
     auteur = doc.xpath('//tei:titleStmt/tei:author/text()', namespaces=ns)[0]
     editeur = doc.xpath('//tei:titleStmt/tei:editor/text()', namespaces=ns)[0]
+    date = doc.xpath('//tei:sourceDesc//tei:date/text()', namespaces=ns)[0]
+    ville = doc.xpath('//tei:sourceDesc//tei:pubPlace/text()', namespaces=ns)[0]
+    editeur_papier = doc.xpath('//tei:sourceDesc//tei:publisher/text()', namespaces=ns)[0]
+
+    lignes = doc.xpath('//tei:l[@n]', namespaces=ns)
+    derniere_ligne = lignes[-1]
+    derniere_ligne = derniere_ligne.get("n")
+
+    lb = doc.xpath('//tei:castItem//tei:lb', namespaces=ns)
+
+    for lb in doc.xpath("//tei:castList//tei:lb", namespaces=ns):
+        remove_element(lb)
+
+    personnages = doc.xpath('//tei:castItem/text()', namespaces=ns)
+
 
     return {
         "Titre": titre,
         "Auteur": auteur,
-        "Éditeur": editeur
+        "Editeur": editeur,
+        "Date": date,
+        "Ville": ville,
+        "Editeur_papier": editeur_papier,
+        "Lignes": derniere_ligne,
+        "Personnages": personnages
     }
+
+
 
 
 app = Flask("Application")
