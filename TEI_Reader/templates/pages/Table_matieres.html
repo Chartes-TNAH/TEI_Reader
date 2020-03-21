@@ -1,11 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title> Table des matières </title>
-</head>
-
-<body>
+{% extends "layout.html" %}
+{% block corps %}
     <ul>
         {% for acte in table %}
         <li>{{ acte.Titre }}
@@ -24,6 +18,4 @@
         {% endfor %}
 
     </ul>
-</body>
-
-</html>
+{% endblock %}

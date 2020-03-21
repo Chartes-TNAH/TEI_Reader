@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Index des personnages</title>
-</head>
-<body>
+{% extends "layout.html" %}
+{% block corps %}
 <ul>
     {% for personnage, numero in index.items() %}
     <li>
@@ -12,5 +7,4 @@
     </li>
     {% endfor %}
 </ul>
-</body>
-</html>
+{% endblock %}

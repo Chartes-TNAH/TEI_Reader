@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Présentation</title>
-</head>
-<body>
+{% extends "layout.html" %}
+{% block corps %}
 <h1>Présentation de {{ infos.Titre}} de {{ infos.Auteur }}</h1>
 
 <p>
@@ -23,7 +18,18 @@
     </li>
     {% endfor %}
 </ul>
-
 </p>
-</body>
-</html>
+
+<p>
+    Nous vous proposons d'en consulter <a href="Table_des_matieres">la table des matières</a> ainsi que
+    <a href="Index_personnages">l'index des personnages</a> et <a href="Index_lieux">l'index des lieux</a>
+    en cliquant sur les liens.
+</p>
+
+<p>
+    Vous trouverez <a href="Texte">ici</a> le texte dans son intégralité.
+</p>
+<p>
+    Nous vous souhaitons une bonne consultation.
+</p>
+{% endblock %}

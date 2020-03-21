@@ -1,12 +1,8 @@
-# lxml est la librairie permettant de traiter du XML en python
+import glob
 from lxml import etree
-
-# Flask permettra d'afficher les résultats sur une page html
-from flask import Flask, render_template
+import os
 
 # Dès qu'on utilise du XPath, il est nécessaire de préciser le namespace, on le met donc dans une variable
-from lxml.etree import strip_elements
-
 ns = {'tei': 'http://www.tei-c.org/ns/1.0'}
 
 
@@ -127,7 +123,7 @@ def remove_element(el):
     :param el: un élément xml
     """
     parent = el.getparent()
-    if el.tail.strip():
+    if el.tail and el.tail.strip():
         prev = el.getprevious()
         if prev:
             prev.tail = (prev.tail or '') + el.tail
@@ -151,6 +147,8 @@ def presenter(doc):
 
     for lb in doc.xpath("//tei:castList//tei:lb", namespaces=ns):
         remove_element(lb)
+    for c in doc.xpath("//tei:c", namespaces=ns):
+        remove_element(c)
 
     personnages = doc.xpath('//tei:castItem/text()', namespaces=ns)
 
@@ -166,38 +164,22 @@ def presenter(doc):
         "Personnages": personnages
     }
 
+def ouvrir_doc(document):
+    chemin_actuel = os.path.dirname(os.path.abspath(__file__))
+    return etree.parse(os.path.join(chemin_actuel, "data", document))
 
-
-
-app = Flask("Application")
-app.config["TEMPLATES_AUTO_RELOAD"] = True
-
-
-@app.route("/<document>/Accueil")
-def accueil(document):
-    doc = etree.parse("data/" + document)
-    return render_template("Accueil.html")
-
-
-@app.route("/<document>/Table_des_matieres")
-def table_matieres(document):
-    doc = etree.parse("data/" + document)
-    return render_template("Table_matieres.html", table=table_des_matieres(doc))
-
-@app.route("/<document>/Index_lieux")
-def index_des_lieux(document):
-    doc = etree.parse("data/" + document)
-    return render_template("Index_lieux.html", index=index_lieux(doc))
-
-@app.route("/<document>/Index_personnages")
-def index_des_personnages(document):
-    doc = etree.parse("data/" + document)
-    return render_template("Index_personnages.html", index=index_personnages(doc))
-
-@app.route("/<document>/Presentation")
-def presentation(document):
-    doc = etree.parse("data/" + document)
-    return render_template("Presentation.html", infos=presenter(doc))
-
-if __name__ == "__main__":
-    app.run()
+def corpus():
+    files = glob.glob("TEI_Reader/data/*")
+    files.sort()
+    liste_titre = []
+    for file in files:
+        file = file.replace("TEI_Reader/data/", "")
+        doc = ouvrir_doc(file)
+        titre = doc.xpath('//tei:titleStmt/tei:title/text()', namespaces=ns)[0]
+        auteur = doc.xpath('//tei:titleStmt/tei:author/text()', namespaces=ns)[0]
+        liste_titre.append({
+            "Fichier":file,
+            "Titre": titre,
+            "Auteur": auteur
+        })
+    return liste_titre
