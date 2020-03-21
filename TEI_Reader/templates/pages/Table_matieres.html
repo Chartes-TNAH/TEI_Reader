@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block corps %}
+<div class="container">
     <ul>
         {% for acte in table %}
         <li>{{ acte.Titre }}
@@ -18,4 +19,5 @@
         {% endfor %}
 
     </ul>
+</div>
 {% endblock %}

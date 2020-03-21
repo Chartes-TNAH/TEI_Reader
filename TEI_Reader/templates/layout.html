@@ -1,27 +1,32 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <meta charset="UTF-8">
     <title>TEI Reader</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <style type="text/css">
-            .hero  {
-                background-position: center center;
-                padding:10vh;
-                background-image: url({{url_for("static", filename="images/gallica_btv1b55007071f.jpeg")}});
+            @font-face {
+            font-family:"Zapfino";
+            src: url("/static/fonts/Zapfino.otf");
             }
-            .container .hero {
-                background-image: none;
+            .hero  {
+                background-position: center 85%;
+                padding:10vh;
+                color: white;
+                background-image: linear-gradient(to right, #c6c5c9, transparent, transparent), url({{url_for("static", filename="images/[La_Comédie_française]___[dessin]_[...]Meunier_Antoine_btv1b10303194d_1.jpeg")}});
+            }
+            .hero a {
+            color: #111; font-family: 'Zapfino', sans-serif; font-size: 75px;
+            font-weight: bold; letter-spacing: -1px; line-height: 1; text-align: left;
+            }
+            .hero a:hover{
+            text-decoration: none;
             }
         </style>
 </head>
 <body>
 <div class="jumbotron hero">
-  <h1 class="display-4">Hello, world!</h1>
-  <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-  <hr class="my-4">
-  <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-  <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+        <h1 class="display-4"><a href="/Accueil">TEI Reader</a></h1>
 </div>
 {% block corps %}{% endblock %}
 </body>
