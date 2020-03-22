@@ -6,7 +6,7 @@ from .fonctions import *
 from lxml import etree
 
 
-@app.route("/Accueil")
+@app.route("/")
 def accueil():
     return render_template("pages/Accueil.html", liste=corpus())
 

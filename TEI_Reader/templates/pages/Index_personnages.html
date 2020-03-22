@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block corps %}
+<div class="container">
 <ul>
     {% for personnage, numero in index.items() %}
     <li>
@@ -7,4 +8,5 @@
     </li>
     {% endfor %}
 </ul>
+</div>
 {% endblock %}

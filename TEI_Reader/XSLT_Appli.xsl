@@ -16,12 +16,24 @@
                 <h1>
                     <xsl:apply-templates select=".//tei:titleStmt/tei:title"/>
                 </h1>
-                <h2>
+                <ul>
                     <xsl:apply-templates select=".//tei:titleStmt/tei:author"/>
-                </h2>
+                </ul>
 
+<p>
+    <xsl:apply-templates select="//tei:l/tei:choice/tei:reg"/>
+</p>
             </body>
         </html>
+    </xsl:template>
+
+        <xsl:template match="//tei:l/tei:choice/tei:reg">
+        <xsl:element name="li">
+            <xsl:attribute name="title">
+                <xsl:number select="." format="1" level="any"/>
+            </xsl:attribute>
+            <xsl:apply-templates/>
+        </xsl:element>
     </xsl:template>
 </xsl:stylesheet>
 
