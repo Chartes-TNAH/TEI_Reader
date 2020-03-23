@@ -1,11 +1,17 @@
+# Cette librairie permet de lister tous les fichiers d'un dossier
 import glob
+
+# Cette librairie permet de parser du XML en python
 from lxml import etree
+
+# Cette librairie petmet d'accéder au système de fichiers
 import os
+
+# Cette librairie sera utile pour analyser les textes, j'y ajoute cependant encore quelques "stop words"
 from stop_words import get_stop_words
 stop_words = get_stop_words('fr')
 stop_words.extend(["jai", "d", "", "quil", "cest", "dun", "sil", "quun", "quune", "quon", "dune", "nest", "oui", "non",
                    "lon", "jen"])
-
 
 # Dès qu'on utilise du XPath, il est nécessaire de préciser le namespace, on le met donc dans une variable
 ns = {'tei': 'http://www.tei-c.org/ns/1.0'}
@@ -14,7 +20,7 @@ ns = {'tei': 'http://www.tei-c.org/ns/1.0'}
 def index_personnages(doc):
     """ Fonction qui permet d'obtenir un index des personnages
 
-    :param doc: un document XML donné en entrée
+    :param doc: un document XML
     :return: un dictionnaire ayant pour clefs les noms de personnages et pour valeurs une liste avec les occurences
     de chaque personnage
     :rtype: dict
@@ -49,7 +55,7 @@ def index_personnages(doc):
 def index_lieux(doc):
     """ Fonction qui permet d'obtenir un index des lieux
 
-       :param doc: un document XML donné en entrée
+       :param doc: un document XML
        :return: un dictionnaire ayant pour clefs les noms de lieux et pour valeurs une liste avec les occurences
        de chaque lieu
        :rtype: dict
@@ -84,7 +90,7 @@ def index_lieux(doc):
 def table_des_matieres(doc):
     """ Fonction qui permet d'obtenir une table des matières de chaque document
 
-       :param doc: un document XML donné en entrée
+       :param doc: un document XML
        :return: une liste de dictionnaires, il y a un dictionnaire par acte. Les scènes sont elles-mêmes comprises
        dans une liste de dictionnaires qui a pour clefs 'Titre' et 'Personnages'.
        :rtype: list
@@ -122,6 +128,7 @@ def table_des_matieres(doc):
 
     return tdm
 
+
 def remove_element(el):
     """
     Fonction qui permet de supprimer un élément dans l'arbre XML sans supprimer pour autant le texte qui suit
@@ -136,7 +143,15 @@ def remove_element(el):
             parent.text = (parent.text or '') + el.tail
     parent.remove(el)
 
+
 def presenter(doc):
+    """
+    Cette fonction permet d'obtenir différentes informations sur chaque document
+    :param doc: un document XML
+    :return: un dictionnaire contenant le titre, l'auteur, l'éditeur électronique, la date et le lieu de publication ainsi que le
+    nom de l'éditeur papier
+    :rtype: dict
+    """
     titre = doc.xpath('//tei:titleStmt/tei:title/text()', namespaces=ns)[0]
     auteur = doc.xpath('//tei:titleStmt/tei:author/text()', namespaces=ns)[0]
     editeur = doc.xpath('//tei:titleStmt/tei:editor/text()', namespaces=ns)[0]
@@ -147,8 +162,6 @@ def presenter(doc):
     lignes = doc.xpath('//tei:l[@n]', namespaces=ns)
     derniere_ligne = lignes[-1]
     derniere_ligne = derniere_ligne.get("n")
-
-    lb = doc.xpath('//tei:castItem//tei:lb', namespaces=ns)
 
     for lb in doc.xpath("//tei:castList//tei:lb", namespaces=ns):
         remove_element(lb)
@@ -169,11 +182,18 @@ def presenter(doc):
         "Personnages": personnages
     }
 
+
 def ouvrir_doc(document):
     chemin_actuel = os.path.dirname(os.path.abspath(__file__))
     return etree.parse(os.path.join(chemin_actuel, "data", document))
 
+
 def corpus():
+    """
+    Cette fonction permet d'obtenir la liste de tous les fichiers présents dans le corpus étudié
+    :return: liste de dictionnaires (un dictionnaire par oeuvre, contenant le nom du fichier, le titre et l'auteur)
+    :rtype: list
+    """
     files = glob.glob("TEI_Reader/data/*")
     files.sort()
     liste_titre = []
@@ -189,16 +209,31 @@ def corpus():
         })
     return liste_titre
 
+
 #Fonctions servant à l'analyse du texte
 
+
 def normalisation(mot):
+    """
+    Cette fonction permet de normaliser les mots en retirant les marques de ponctuation et en normalisant la casse
+    :param mot: une chaîne de caractères
+    :return: mot normalisé
+    :rtype: string
+    """
     ponctuation = '!@#$%^&*()_-+={}[]:;"\'|<>,.?/~`’'
     for marqueur in ponctuation:
         mot = mot.replace(marqueur, "")
     resultat = mot.lower()
     return resultat
 
+
 def liste_mots(doc):
+    """
+    Fonction qui permet d'obtenir une liste de tous les mots employés dans un document
+    :param doc: un document XML
+    :return: liste des mots
+    :rtype: list
+    """
     liste = []
     lignes = doc.xpath('//tei:reg/text()', namespaces=ns)
     for ligne in lignes:
@@ -209,7 +244,14 @@ def liste_mots(doc):
                 liste.append(mot)
     return liste
 
+
 def decompte(liste):
+    """
+    Fonction qui compte le nombre d'occurrences de chaque mot
+    :param liste: liste de mots
+    :return: un dictionnaire ayant pour clefs le mot et pour valeur son nombre d'occurrences
+    :rtype:dict
+    """
     resultats = {}
     for mot in liste:
         if mot not in resultats:

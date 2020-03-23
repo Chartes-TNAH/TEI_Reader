@@ -1,12 +1,19 @@
 {% extends "layout.html" %}
 {% block corps %}
 <div class="container">
+    <h1>Analyse textuelle de l'oeuvre</h1>
+    <div>
+        <h4>Fréquence des mots les plus utilisés</h4>
+        <p>Seuls les mots présents au moins vingt fois ont été retenus.</p>
 <ul>
     {% for mot, nombre in analyse|dictsort(false, 'value', reverse=True) %}
+    {% if nombre > 20 %}
     <li>
         {{ mot }} : {{ nombre }}
     </li>
+    {% endif %}
     {% endfor %}
 </ul>
+    </div>
 </div>
 {% endblock %}
