@@ -36,8 +36,13 @@ def presentation(document):
 
 
 @app.route("/<document>/Texte")
-def Texte(document):
+def texte(document):
     xslt = etree.parse('TEI_Reader/XSLT_Appli.xsl')
     transform = etree.XSLT(xslt)
     doc = ouvrir_doc(document)
     return str(transform(doc))
+
+@app.route("/<document>/Analyse_oeuvre")
+def analyse(document):
+    doc = ouvrir_doc(document)
+    return render_template("pages/Analyse_oeuvre.html", analyse=decompte(liste_mots(doc)))

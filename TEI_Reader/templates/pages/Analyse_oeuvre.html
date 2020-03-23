@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block corps %}
+<div class="container">
+<ul>
+    {% for mot, nombre in analyse|dictsort(false, 'value', reverse=True) %}
+    <li>
+        {{ mot }} : {{ nombre }}
+    </li>
+    {% endfor %}
+</ul>
+</div>
+{% endblock %}

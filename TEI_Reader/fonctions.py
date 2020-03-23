@@ -1,6 +1,11 @@
 import glob
 from lxml import etree
 import os
+from stop_words import get_stop_words
+stop_words = get_stop_words('fr')
+stop_words.extend(["jai", "d", "", "quil", "cest", "dun", "sil", "quun", "quune", "quon", "dune", "nest", "oui", "non",
+                   "lon", "jen"])
+
 
 # Dès qu'on utilise du XPath, il est nécessaire de préciser le namespace, on le met donc dans une variable
 ns = {'tei': 'http://www.tei-c.org/ns/1.0'}
@@ -183,3 +188,32 @@ def corpus():
             "Auteur": auteur
         })
     return liste_titre
+
+#Fonctions servant à l'analyse du texte
+
+def normalisation(mot):
+    ponctuation = '!@#$%^&*()_-+={}[]:;"\'|<>,.?/~`’'
+    for marqueur in ponctuation:
+        mot = mot.replace(marqueur, "")
+    resultat = mot.lower()
+    return resultat
+
+def liste_mots(doc):
+    liste = []
+    lignes = doc.xpath('//tei:reg/text()', namespaces=ns)
+    for ligne in lignes:
+        mots = ligne.split()
+        for mot in mots:
+            mot = normalisation(mot)
+            if mot not in stop_words:
+                liste.append(mot)
+    return liste
+
+def decompte(liste):
+    resultats = {}
+    for mot in liste:
+        if mot not in resultats:
+            resultats[mot] = liste.count(mot)
+    return resultats
+
+
