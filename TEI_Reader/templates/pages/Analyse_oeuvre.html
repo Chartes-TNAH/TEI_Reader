@@ -1,10 +1,12 @@
 {% extends "layout.html" %}
 {% block corps %}
+<script src="/static/js/wordcloud2.js"></script>
 <div class="container">
     <h1>Analyse textuelle de l'oeuvre</h1>
     <div>
         <h4>Fréquence des mots les plus utilisés</h4>
         <p>Seuls les mots présents au moins vingt fois ont été retenus.</p>
+        <div class="indexmots">
 <ul>
     {% for mot, nombre in analyse|dictsort(false, 'value', reverse=True) %}
     {% if nombre > 20 %}
@@ -14,6 +16,21 @@
     {% endif %}
     {% endfor %}
 </ul>
+            <canvas id="nuage" width="700" height="500"></canvas>
+        </div>
     </div>
 </div>
+
+
+<script>
+    var listes = [];
+{% for mot, nombre in analyse|dictsort(false, 'value', reverse=True) %}
+    {% if nombre > 20 %}
+    var liste = ["{{ mot }}", {{ nombre}}];
+    listes.push(liste);
+    {% endif %}
+{% endfor %}
+
+    WordCloud(document.getElementById('nuage'), { list: listes } );
+</script>
 {% endblock %}
