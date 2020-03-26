@@ -11,7 +11,7 @@ import os
 from stop_words import get_stop_words
 stop_words = get_stop_words('fr')
 stop_words.extend(["jai", "d", "", "quil", "cest", "dun", "sil", "quun", "quune", "quon", "dune", "nest", "oui", "non",
-                   "lon", "jen"])
+                   "lon", "jen", "quà", "men", "quen", "jy", "na", "peutetre", "peutêtre", "nen", "lautre", "toute"])
 
 # Dès qu'on utilise du XPath, il est nécessaire de préciser le namespace, on le met donc dans une variable
 ns = {'tei': 'http://www.tei-c.org/ns/1.0'}

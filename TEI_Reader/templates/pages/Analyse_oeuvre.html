@@ -5,18 +5,20 @@
     <h1>Analyse textuelle de l'oeuvre</h1>
     <div>
         <h4>Fréquence des mots les plus utilisés</h4>
-        <p>Seuls les mots présents au moins vingt fois ont été retenus.</p>
         <div class="indexmots">
-<ul>
-    {% for mot, nombre in analyse|dictsort(false, 'value', reverse=True) %}
-    {% if nombre > 20 %}
-    <li>
-        {{ mot }} : {{ nombre }}
+        <div id="liste-mots">
+<ul class="list-group">
+    {% for mot, nombre in (analyse|dictsort(false, 'value', reverse=True))[:50] %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        {{ mot }}
+        <span class="badge badge-primary badge-pill">{{ nombre }}</span>
     </li>
-    {% endif %}
     {% endfor %}
 </ul>
-            <canvas id="nuage" width="700" height="500"></canvas>
+        </div>
+            <div>
+            <canvas id="nuage" width="600" height="600"></canvas>
+            </div>
         </div>
     </div>
 </div>
@@ -24,13 +26,16 @@
 
 <script>
     var listes = [];
-{% for mot, nombre in analyse|dictsort(false, 'value', reverse=True) %}
-    {% if nombre > 20 %}
+{% for mot, nombre in (analyse|dictsort(false, 'value', reverse=True))[:50] %}
     var liste = ["{{ mot }}", {{ nombre}}];
     listes.push(liste);
-    {% endif %}
 {% endfor %}
-
-    WordCloud(document.getElementById('nuage'), { list: listes } );
+    var min = Math.min(...listes.map(x => x[1]))
+    var options = {
+        list: listes,
+        fontFamily: "Zapfino",
+        weightFactor: 35/min,
+            };
+    WordCloud(document.getElementById('nuage'), options);
 </script>
 {% endblock %}
