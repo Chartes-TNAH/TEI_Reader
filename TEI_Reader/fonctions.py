@@ -7,6 +7,9 @@ from lxml import etree
 # Cette librairie petmet d'accéder au système de fichiers
 import os
 
+# Cette librairie permet d'utiliser des expressions régulières en python
+import re
+
 # Cette librairie sera utile pour analyser les textes, j'y ajoute cependant encore quelques "stop words"
 from stop_words import get_stop_words
 stop_words = get_stop_words('fr')
@@ -16,11 +19,22 @@ stop_words.extend(["jai", "d", "", "quil", "cest", "dun", "sil", "quun", "quune"
 # Dès qu'on utilise du XPath, il est nécessaire de préciser le namespace, on le met donc dans une variable
 ns = {'tei': 'http://www.tei-c.org/ns/1.0'}
 
+def normaliser_nom(mot):
+    """Cette fonction permet de normaliser les noms de personnages ou de lieux en retirant les marques de ponctuation
+    :param mot: une chaîne de caractères
+    :return: nom normalisé
+    :rtype: string
+    """
+    ponctuation = '!@#$%^&*()_-+={}[]:;"\'|<>,.?/~`’'
+    for marqueur in ponctuation:
+        mot = mot.replace(marqueur, "")
+        mot = mot.capitalize()
+    return mot
 
 def index_personnages(doc):
     """ Fonction qui permet d'obtenir un index des personnages
 
-    :param doc: un document XML
+    :param doc: un chemin de fichier
     :return: un dictionnaire ayant pour clefs les noms de personnages et pour valeurs une liste avec les occurences
     de chaque personnage
     :rtype: dict
@@ -43,6 +57,7 @@ def index_personnages(doc):
 
         # On récupère ensuite pour chacune de ses lignes le nom du personnage associé, via l'élément 'persName'
         for nom_pers in noms_pers:
+            nom_pers = normaliser_nom(nom_pers)
             if nom_pers not in index:
                 index[nom_pers] = []
 
@@ -55,7 +70,7 @@ def index_personnages(doc):
 def index_lieux(doc):
     """ Fonction qui permet d'obtenir un index des lieux
 
-       :param doc: un document XML
+       :param doc: un chemin de fichier
        :return: un dictionnaire ayant pour clefs les noms de lieux et pour valeurs une liste avec les occurences
        de chaque lieu
        :rtype: dict
@@ -78,6 +93,7 @@ def index_lieux(doc):
 
         # On récupère ensuite pour chacune de ses lignes le nom du lieu associé, via l'élément 'placeName'
         for nom_lieu in noms_lieux:
+            nom_lieu = normaliser_nom(nom_lieu)
             if nom_lieu not in index:
                 index[nom_lieu] = []
 
@@ -90,7 +106,7 @@ def index_lieux(doc):
 def table_des_matieres(doc):
     """ Fonction qui permet d'obtenir une table des matières de chaque document
 
-       :param doc: un document XML
+       :param doc: un chemin de fichier
        :return: une liste de dictionnaires, il y a un dictionnaire par acte. Les scènes sont elles-mêmes comprises
        dans une liste de dictionnaires qui a pour clefs 'Titre' et 'Personnages'.
        :rtype: list
@@ -106,17 +122,24 @@ def table_des_matieres(doc):
         scenes = acte.xpath('./tei:div', namespaces=ns)
 
         tdm_scene = []
+        speaker = []
         # On récupère tous les speaker puis on utilise le type set() pour n'en garder qu'un. Cette méthode m'a paru
         # être la meilleure puisque lorsque la scène est un monologue, il n'y a pas d'éléments 'stage' or l'élément
         # 'speaker' est présent quel que soit le nombre de personnage(s).
         for scene in scenes:
             titre_scene = scene.xpath('./tei:head/text()', namespaces=ns)[0]
-            speaker = set(scene.xpath('.//tei:speaker/text()', namespaces=ns))
+            personnages = set(scene.xpath('.//tei:speaker/text()', namespaces=ns))
+
+            # On normalise le nom de chaque personnage (notamment afin d'enlever les signes de ponctuation qui
+            #pourraient fausser le set.
+            for personnage in personnages:
+                personnage = normaliser_nom(personnage)
+                speaker.append(personnage)
 
             # Pour chaque scène, on stocke dans un dictionnaire le titre (clef 1) et les personnages (clef 2).
             tdm_scene.append({
                 "Titre": titre_scene,
-                "Personnages": speaker
+                "Personnages": set(speaker)
             })
 
         # Pour chaque acte, on stocke dans un dictionnaire le titre (clef 1) et la liste des scènes précedemment
@@ -147,7 +170,7 @@ def remove_element(el):
 def presenter(doc):
     """
     Cette fonction permet d'obtenir différentes informations sur chaque document
-    :param doc: un document XML
+    :param doc: un chemin de fichier
     :return: un dictionnaire contenant le titre, l'auteur, l'éditeur électronique, la date et le lieu de publication ainsi que le
     nom de l'éditeur papier
     :rtype: dict
@@ -230,7 +253,7 @@ def normalisation(mot):
 def liste_mots(doc):
     """
     Fonction qui permet d'obtenir une liste de tous les mots employés dans un document
-    :param doc: un document XML
+    :param doc: un chemin de fichier
     :return: liste des mots
     :rtype: list
     """
@@ -258,4 +281,14 @@ def decompte(liste):
             resultats[mot] = liste.count(mot)
     return resultats
 
+def affichage_auteur(doc):
+    """
+    Fonction qui permet d'obtenir le nom normalisé de l'auteur à partir du titre du fichier pour en afficher le portrait
+    :param doc: un chemin de fichier
+    :return: string
+    """
+    doc = str(doc)
+    # re.findall permet de trouver toutes les occurences du motif recherché, on en conserve ainsi que le premier
+    nom = re.findall("([A-Za-z]+)", doc)[0]
+    return "/static/images/" + nom + ".jpg"
 

@@ -1,6 +1,8 @@
 {% extends "layout.html" %}
 {% block corps %}
 <div class="container">
+    <p class="retour"><a href="javascript:history.go(-1)">Retour à la présentation</a></p>
+    <h1 class="marging">Table des matières de {{ infos.Titre }}</h1>
     <ul>
         {% for acte in table %}
         <li>{{ acte.Titre }}
@@ -8,9 +10,7 @@
                 {% for scene in acte.Scènes %}
                 <li>{{ scene.Titre }}
                     <p>
-                        {% for personnage in scene.Personnages %}
-                        {{personnage}}
-                        {% endfor %}
+                        {{ scene.Personnages|join(", ") }}
                     </p>
                 </li>
                 {% endfor %}

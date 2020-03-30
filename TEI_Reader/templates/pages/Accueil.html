@@ -2,16 +2,28 @@
 {% block corps %}
 <div class="container">
     <p class="lead">Développée dans le cadre du Master Technologies Numériques Appliquées à l'Histoire de l'École nationale
-        des Chartes, cette application vise à présenter et exploiter un corpus de documents encodés en XML TEI.</p>
-<p>
+        des Chartes, cette application vise à présenter et exploiter un corpus de documents encodés en XML TEI.
+    </p>
+    <p>
+        Le corpus proposé est un ensemble de neuf pièces de théâtre de la seconde moitié du XVIIe siècle. Elles ont été
+        écrites par Jean Galbert de Campistron, Molière, Nicolas Pradon et Racine. En cliquant sur leur titre, vous
+        trouverez de plus amples informations sur chacune d'entre elles.
+    </p>
+    <p>
+        Nous vous proposons également <a href="Analyse">une analyse comparée</a> de l'ensemble des neuf oeuvres.
+    </p>
+
+<div class="marging">
     <h2>Corpus</h2>
     <p>
-<ul class="list-group list-group-flush"> {% for fichier in liste %}
-    <li class="list-group-item"> <a href="{{ fichier.Fichier }}/Presentation"> {{ fichier.Titre }}
+<ul class="list-group list-group-flush">
+    {% for fichier in liste %}
+    <li class="list-group-item"> <a href="{{ fichier.Fichier }}/Presentation">
+        {{ fichier.Titre }}
         <small class="text-muted">de {{fichier.Auteur}} </small></a></li>
     {% endfor %}
 </ul>
     </p>
-</p>
+</div>
 </div>
 {% endblock %}

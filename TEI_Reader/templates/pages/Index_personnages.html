@@ -1,6 +1,8 @@
 {% extends "layout.html" %}
 {% block corps %}
 <div class="container">
+    <p class="retour"><a href="javascript:history.go(-1)">Retour à la présentation</a></p>
+    <h1 class="marging">Index des personnages de {{ infos.Titre }}</h1>
 <ul>
     {% for personnage, numero in index.items() %}
     <li>

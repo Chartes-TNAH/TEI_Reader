@@ -22,7 +22,8 @@
 
 .hero p {
     color #4b4e54 ; text-align: right; position:relative ; bottom:-10vh; font-size: 10px;
-            }
+}
+
 .indexmots {
     display: flex;
 }
@@ -33,4 +34,30 @@
 
 #liste-mots > ul {
     width: 60%;
+}
+
+.marging {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 150px;
+}
+
+.portrait {
+    float: right;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 50px;
+    margin-left: 50px;
+}
+
+.retour {
+  background-color: #d3d6db;
+  border: none;
+  color: black;
+  border-radius: 12px;
+  padding: 15px 28px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
 }
