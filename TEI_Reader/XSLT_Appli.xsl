@@ -10,31 +10,56 @@
             <head>
                 <meta charset="UTF-8"/>
                 <title><xsl:apply-templates select=".//tei:titleStmt/tei:title"/></title>
+                <link rel="stylesheet" href="/static/css/styles.css"/>
             </head>
-            <body>
+            <body class="piece">
 
                 <h1>
                     <xsl:apply-templates select=".//tei:titleStmt/tei:title"/>
                 </h1>
-                <ul>
+                <p>
                     <xsl:apply-templates select=".//tei:titleStmt/tei:author"/>
-                </ul>
+                </p>
+                
+                    <xsl:apply-templates select="//tei:div[@type='act']"/>
 
-<p>
-    <xsl:apply-templates select="//tei:l/tei:choice/tei:reg"/>
-</p>
             </body>
         </html>
     </xsl:template>
-
-        <xsl:template match="//tei:l/tei:choice/tei:reg">
-        <xsl:element name="li">
-            <xsl:attribute name="title">
-                <xsl:number select="." format="1" level="any"/>
-            </xsl:attribute>
-            <xsl:apply-templates/>
-        </xsl:element>
+    
+    <xsl:template match="//tei:div[@type='act']">
+        <xsl:for-each select=".">
+            <h2 class="titre_acte">
+            <xsl:value-of select="./tei:head"/>
+            </h2>
+            <xsl:for-each select="./tei:div">
+                <h3 class="titre_scene">
+                <xsl:value-of select="./tei:head"/>
+                </h3>
+                <xsl:for-each select="./tei:sp">
+                    <xsl:element name="p">
+                        <xsl:attribute name="class">
+                            <xsl:text>speaker</xsl:text>
+                        </xsl:attribute>
+                        <xsl:value-of select="./tei:speaker"/>
+                    </xsl:element>
+                    <xsl:value-of select="./tei:stage/tei:choice/tei:reg"/>
+                    <xsl:for-each select="./tei:l">
+                        <xsl:element name="p">
+                            <xsl:attribute name="id">
+                                <xsl:value-of select="./@n"/>
+                            </xsl:attribute>
+                            <xsl:attribute name="class">
+                                <xsl:text>ligne</xsl:text>
+                            </xsl:attribute>
+                            <xsl:value-of select="./tei:choice/tei:reg"/>
+                        </xsl:element>
+                    </xsl:for-each>
+                </xsl:for-each>
+            </xsl:for-each>
+        </xsl:for-each>
     </xsl:template>
+
 </xsl:stylesheet>
 
 

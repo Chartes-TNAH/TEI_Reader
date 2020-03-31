@@ -12,8 +12,13 @@
 }
 
 .hero a {
-    color: #111; font-family: 'Zapfino', sans-serif; font-size: 75px;
-    font-weight: bold; letter-spacing: -1px; line-height: 1; text-align: left;
+    color: #111;
+    font-family: Zapfino, sans-serif;
+    font-size: 75px;
+    font-weight: bold;
+    letter-spacing: -1px;
+    line-height: 1;
+    text-align: left;
 }
 
 .hero a:hover{
@@ -21,7 +26,11 @@
 }
 
 .hero p {
-    color #4b4e54 ; text-align: right; position:relative ; bottom:-10vh; font-size: 10px;
+    color #4b4e54;
+    text-align: right;
+    position:relative;
+    bottom:-10vh;
+    font-size: 10px;
 }
 
 .indexmots {
@@ -51,13 +60,66 @@
 }
 
 .retour {
-  background-color: #d3d6db;
-  border: none;
-  color: black;
-  border-radius: 12px;
-  padding: 15px 28px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
+    background-color: #d3d6db;
+    border: none;
+    color: black;
+    border-radius: 12px;
+    padding: 15px 28px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.act {
+    font-size: 25px;
+    font-family: Arial;
+}
+
+.scene {
+    font-size: 20px;
+    font-family: Arial;
+}
+
+.perso {
+    font-family: Arial;
+    font-style: italic;
+}
+
+.index_entree {
+    font-family: Arial;
+    font-size: 20px;
+}
+
+.index_numeros {
+    font-family: Arial;
+    font-size: 15px;
+}
+
+.piece {
+    font-family: Arial;
+    text-align: center;
+}
+
+.titre_acte {
+    font-size: 25px;
+    margin-top:50px;
+}
+
+.titre_scene {
+    font-size: 20px;
+    margin-top: 40px;
+}
+
+.speaker {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 20px;
+
+}
+
+.ligne {
+    font-size: 15px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }

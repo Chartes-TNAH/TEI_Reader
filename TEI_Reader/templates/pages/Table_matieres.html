@@ -5,11 +5,13 @@
     <h1 class="marging">Table des matières de {{ infos.Titre }}</h1>
     <ul>
         {% for acte in table %}
-        <li>{{ acte.Titre }}
+        <li>
+            <p class="act">{{ acte.Titre }}</p>
             <ul>
                 {% for scene in acte.Scènes %}
-                <li>{{ scene.Titre }}
-                    <p>
+                <li>
+                    <p class="scene">{{ scene.Titre }}</p>
+                    <p class="perso">
                         {{ scene.Personnages|join(", ") }}
                     </p>
                 </li>

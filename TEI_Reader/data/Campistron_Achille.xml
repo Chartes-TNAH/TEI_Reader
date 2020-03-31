@@ -730,7 +730,7 @@
                <div><head>SCENE PREMIERE.</head>
                   <stage>ACHILE, PATROCLE.</stage>
                   <sp>
-                     <stage>PATROCLE.</stage>
+                     <speaker>PATROCLE.</speaker>
                      <l n="83">
                         <choice>
                            <orig>On, je ne ſçaurois plus me taire,</orig>
@@ -819,7 +819,7 @@
                      </l>
                   </sp>
                   <sp>
-                     <stage>ACHILE.</stage>
+                     <speaker>ACHILE.</speaker>
                      <l n="97">
                         <choice>
                            <orig>Je vois avec plaiſir les pertes de la <placeName>Grece</placeName>,</orig>
@@ -846,7 +846,7 @@
                      </l>
                   </sp>
                   <sp>
-                     <stage>PATROCLE.</stage>
+                     <speaker>PATROCLE.</speaker>
                      <l n="101">
                         <choice>
                            <orig>Dequoy ſert à ce Roy coupable</orig>
@@ -897,7 +897,7 @@
                      </l>
                   </sp>
                   <sp>
-                     <stage>ACHILE.</stage>
+                     <speaker>ACHILE.</speaker>
                      <l n="109">
                         <choice>
                            <orig>Connoy mieux les raiſons de mon juſte courroux,</orig>
@@ -973,7 +973,7 @@
                      </l>
                   </sp>
                   <sp>
-                     <stage>PATROCLE.</stage>
+                     <speaker>PATROCLE.</speaker>
                      <l n="121">
                         <choice>
                            <orig>Eh bien! d'un œil content regardez nos allarmes;</orig>
