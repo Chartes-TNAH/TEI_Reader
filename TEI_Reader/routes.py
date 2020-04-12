@@ -47,6 +47,3 @@ def analyse_doc(document):
     doc = ouvrir_doc(document)
     return render_template("pages/Analyse_oeuvre.html", analyse=decompte(liste_mots(doc)), infos=presenter(doc))
 
-@app.route("/Analyse")
-def analyse_oeuvres():
-    return render_template("pages/Analyse.html", analyse_corpus=analyse())
