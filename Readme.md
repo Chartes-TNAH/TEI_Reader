@@ -7,3 +7,8 @@ Tei Reader est une application développée en python qui permet de présenter e
 La librairie lxml a été utilisée pour lire les oeuvres.
 
 ## Lancement
+Pour lancer cette application, il vous suffit de :
+*
+*
+
+*Les portraits des auteurs proviennent de Wikipédia.*
