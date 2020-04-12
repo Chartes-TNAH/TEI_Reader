@@ -1,16 +1,17 @@
-# Cette librairie permet de lister tous les fichiers d'un dossier
+# Ce module permet de lister tous les fichiers d'un dossier
 import glob
+
+# Ce module permet d'utiliser des expressions régulières en python
+import re
+
+# Ce module petmet d'accéder au système de fichiers
+import os
 
 # Cette librairie permet de parser du XML en python
 from lxml import etree
 
-# Cette librairie petmet d'accéder au système de fichiers
-import os
-
-# Cette librairie permet d'utiliser des expressions régulières en python
-import re
-
-# Cette librairie sera utile pour analyser les textes, j'y ajoute cependant encore quelques "stop words"
+# Cette librairie sera utile pour analyser les textes, j'y ajoute cependant encore quelques "stop words" qui ne me
+# semblent pas pertinents pour l'analyse textuelle que je propose
 from stop_words import get_stop_words
 stop_words = get_stop_words('fr')
 stop_words.extend(["jai", "d", "", "quil", "cest", "dun", "sil", "quun", "quune", "quon", "dune", "nest", "oui", "non",
@@ -20,8 +21,11 @@ stop_words.extend(["jai", "d", "", "quil", "cest", "dun", "sil", "quun", "quune"
 # Dès qu'on utilise du XPath, il est nécessaire de préciser le namespace, on le met donc dans une variable
 ns = {'tei': 'http://www.tei-c.org/ns/1.0'}
 
+# Fonctions servant à la mise en place des index :
+
 def normaliser_nom(mot):
     """Cette fonction permet de normaliser les noms de personnages ou de lieux en retirant les marques de ponctuation
+
     :param mot: une chaîne de caractères
     :return: nom normalisé
     :rtype: string
@@ -31,6 +35,7 @@ def normaliser_nom(mot):
         mot = mot.replace(marqueur, "")
         mot = mot.capitalize()
     return mot
+
 
 def index_personnages(doc):
     """ Fonction qui permet d'obtenir un index des personnages
@@ -46,9 +51,9 @@ def index_personnages(doc):
 
     ligne_precedente = None
     for ligne in lignes:
-            # Pour chaque ligne dotée d'un attribut 'n', on récupère sa valeur. Ce if est nécessaire puisque certaine
-            # ligne, notamment les stichomyties, ont uniquement un attribut 'part' : on récupère donc le numéro de
-            # la ligne précédente.
+        # Pour chaque ligne dotée d'un attribut 'n', on récupère sa valeur. Ce if est nécessaire puisque certaine
+        # ligne, notamment les stichomyties, ont uniquement un attribut 'part' : on récupère donc le numéro de
+        # la ligne précédente.
         if ligne.get("n"):
             numero_de_ligne = ligne.get("n")
         else:
@@ -84,7 +89,7 @@ def index_lieux(doc):
     ligne_precedente = None
     for ligne in lignes:
         # Il s'agit ici du même code que la fonction index_personnages puisque l'on peut rencontrer les mêmes
-         # problèmes de lignes déjà expliqués.
+        # problèmes de lignes déjà expliqués.
         if ligne.get("n"):
             numero_de_ligne = ligne.get("n")
         else:
@@ -103,6 +108,8 @@ def index_lieux(doc):
         ligne_precedente = numero_de_ligne
     return index
 
+
+# Fonction permet de générer la table des matières
 
 def table_des_matieres(doc):
     """ Fonction qui permet d'obtenir une table des matières de chaque document
@@ -153,6 +160,8 @@ def table_des_matieres(doc):
     return tdm
 
 
+# Fonctions qui permettent de présenter le document
+
 def remove_element(el):
     """
     Fonction qui permet de supprimer un élément dans l'arbre XML sans supprimer pour autant le texte qui suit
@@ -170,10 +179,11 @@ def remove_element(el):
 
 def presenter(doc):
     """
-    Cette fonction permet d'obtenir différentes informations sur chaque document
+    Cette fonction permet d'obtenir des informations déterminées sur chaque document
+
     :param doc: un chemin de fichier
-    :return: un dictionnaire contenant le titre, l'auteur, l'éditeur électronique, la date et le lieu de publication ainsi que le
-    nom de l'éditeur papier
+    :return: un dictionnaire contenant le titre, l'auteur, l'éditeur électronique, la date et le lieu de publication
+    ainsi que le nom de l'éditeur papier
     :rtype: dict
     """
     titre = doc.xpath('//tei:titleStmt/tei:title/text()', namespaces=ns)[0]
@@ -208,6 +218,12 @@ def presenter(doc):
 
 
 def ouvrir_doc(document):
+    """
+    Cette fonction permet d'ouvrir un document
+
+    :param document: un chemin de fichier
+    :return: le même fichier parsé par etree
+    """
     chemin_actuel = os.path.dirname(os.path.abspath(__file__))
     return etree.parse(os.path.join(chemin_actuel, "data", document))
 
@@ -215,6 +231,7 @@ def ouvrir_doc(document):
 def corpus():
     """
     Cette fonction permet d'obtenir la liste de tous les fichiers présents dans le corpus étudié
+
     :return: liste de dictionnaires (un dictionnaire par oeuvre, contenant le nom du fichier, le titre et l'auteur)
     :rtype: list
     """
@@ -234,8 +251,7 @@ def corpus():
     return liste_titre
 
 
-#Fonctions servant à l'analyse du texte
-
+# Fonctions servant à l'analyse du texte
 
 def normalisation(mot):
     """
@@ -272,6 +288,7 @@ def liste_mots(doc):
 def decompte(liste):
     """
     Fonction qui compte le nombre d'occurrences de chaque mot
+
     :param liste: liste de mots
     :return: un dictionnaire ayant pour clefs le mot et pour valeur son nombre d'occurrences
     :rtype:dict
@@ -286,6 +303,7 @@ def decompte(liste):
 def affichage_auteur(doc):
     """
     Fonction qui permet d'obtenir le nom normalisé de l'auteur à partir du titre du fichier pour en afficher le portrait
+
     :param doc: un chemin de fichier
     :return: string
     """
@@ -295,22 +313,6 @@ def affichage_auteur(doc):
     return "/static/images/" + nom + ".jpg"
 
 
-def analyse():
-    files = glob.glob("TEI_Reader/data/*")
-    infos = []
-    for file in files:
-        file = file.replace("TEI_Reader/data/", "")
-        doc = ouvrir_doc(file)
-        editeur = doc.xpath('//tei:titleStmt/tei:editor/text()', namespaces=ns)[0]
-        date = doc.xpath('//tei:sourceDesc//tei:date/text()', namespaces=ns)[0]
-        infos.append(
-            {
-                "Editeurs": editeur,
-                "Dates": date
-            }
-        )
-
-    return infos
 
 
 
