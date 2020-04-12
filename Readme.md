@@ -13,4 +13,4 @@ Pour lancer cette application, il vous suffit de :
 * activer un environnement virtuel (avec Pycharm par exemple)
 * lancer le fichier run.py avec la commande `python run.py
 
-*Les portraits des auteurs proviennent de Wikipédia.*``
+*Les portraits des auteurs proviennent de Wikipédia.*
