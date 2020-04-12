@@ -11,6 +11,6 @@ Pour lancer cette application, il vous suffit de :
 * commencer par vérifier que vous disposez des librairies nécessaires au bon fonctionnement de l'application (cf. requirements.txt)
 * cloner ce dépôt
 * activer un environnement virtuel (avec Pycharm par exemple)
-* lancer le fichier run.py avec la commande `python run.py
+* lancer le fichier run.py avec la commande :  `python run.py`.
 
 *Les portraits des auteurs proviennent de Wikipédia.*
