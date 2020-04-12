@@ -14,10 +14,10 @@
             </head>
             <body class="piece">
 
-                <h1>
+                <h1 class="titre_piece">
                     <xsl:apply-templates select=".//tei:titleStmt/tei:title"/>
                 </h1>
-                <p>
+                <p class="auteur">
                     <xsl:apply-templates select=".//tei:titleStmt/tei:author"/>
                 </p>
                 
@@ -43,7 +43,9 @@
                         </xsl:attribute>
                         <xsl:value-of select="./tei:speaker"/>
                     </xsl:element>
-                    <xsl:value-of select="./tei:stage/tei:choice/tei:reg"/>
+                    <p class="stage">
+                        <xsl:value-of select="./tei:stage/tei:choice/tei:reg"/>
+                    </p>
                     <xsl:for-each select="./tei:l">
                         <xsl:element name="p">
                             <xsl:attribute name="id">

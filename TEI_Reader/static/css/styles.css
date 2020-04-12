@@ -101,6 +101,10 @@
     text-align: center;
 }
 
+.titre_piece {
+    font-size:40px;
+}
+
 .titre_acte {
     font-size: 25px;
     margin-top:50px;
@@ -111,15 +115,27 @@
     margin-top: 40px;
 }
 
-.speaker {
-    font-size: 16px;
+.speaker, .auteur {
+    font-family: Zapfino;
+    font-size: 25px;
     font-weight: bold;
-    margin-top: 20px;
+    margin-top: 25px;
+    margin-bottom: 5px;
+}
 
+.auteur {
+    font-size: 35px;
 }
 
 .ligne {
     font-size: 15px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.stage {
+    font-family: Zapfino;
+    font-size: 35px;
     margin-top: 5px;
     margin-bottom: 5px;
 }

@@ -14,7 +14,8 @@ import re
 from stop_words import get_stop_words
 stop_words = get_stop_words('fr')
 stop_words.extend(["jai", "d", "", "quil", "cest", "dun", "sil", "quun", "quune", "quon", "dune", "nest", "oui", "non",
-                   "lon", "jen", "quà", "men", "quen", "jy", "na", "peutetre", "peutêtre", "nen", "lautre", "toute"])
+                   "lon", "jen", "quà", "men", "quen", "jy", "na", "peutetre", "peutêtre", "nen", "lautre", "toute",
+                   "plus", "va"])
 
 # Dès qu'on utilise du XPath, il est nécessaire de préciser le namespace, on le met donc dans une variable
 ns = {'tei': 'http://www.tei-c.org/ns/1.0'}
@@ -281,6 +282,7 @@ def decompte(liste):
             resultats[mot] = liste.count(mot)
     return resultats
 
+
 def affichage_auteur(doc):
     """
     Fonction qui permet d'obtenir le nom normalisé de l'auteur à partir du titre du fichier pour en afficher le portrait
@@ -291,4 +293,26 @@ def affichage_auteur(doc):
     # re.findall permet de trouver toutes les occurences du motif recherché, on en conserve ainsi que le premier
     nom = re.findall("([A-Za-z]+)", doc)[0]
     return "/static/images/" + nom + ".jpg"
+
+
+def analyse():
+    files = glob.glob("TEI_Reader/data/*")
+    infos = []
+    for file in files:
+        file = file.replace("TEI_Reader/data/", "")
+        doc = ouvrir_doc(file)
+        editeur = doc.xpath('//tei:titleStmt/tei:editor/text()', namespaces=ns)[0]
+        date = doc.xpath('//tei:sourceDesc//tei:date/text()', namespaces=ns)[0]
+        infos.append(
+            {
+                "Editeurs": editeur,
+                "Dates": date
+            }
+        )
+
+    return infos
+
+
+
+
 
