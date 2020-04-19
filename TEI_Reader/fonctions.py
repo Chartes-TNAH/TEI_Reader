@@ -23,6 +23,7 @@ ns = {'tei': 'http://www.tei-c.org/ns/1.0'}
 
 # Fonctions servant à la mise en place des index :
 
+
 def normaliser_nom(mot):
     """Cette fonction permet de normaliser les noms de personnages ou de lieux en retirant les marques de ponctuation
 
@@ -139,7 +140,7 @@ def table_des_matieres(doc):
             personnages = set(scene.xpath('.//tei:speaker/text()', namespaces=ns))
 
             # On normalise le nom de chaque personnage (notamment afin d'enlever les signes de ponctuation qui
-            #pourraient fausser le set.
+            # pourraient fausser le set.
             for personnage in personnages:
                 personnage = normaliser_nom(personnage)
                 speaker.append(personnage)
@@ -204,7 +205,6 @@ def presenter(doc):
 
     personnages = doc.xpath('//tei:castItem/text()', namespaces=ns)
 
-
     return {
         "Titre": titre,
         "Auteur": auteur,
@@ -244,7 +244,7 @@ def corpus():
         titre = doc.xpath('//tei:titleStmt/tei:title/text()', namespaces=ns)[0]
         auteur = doc.xpath('//tei:titleStmt/tei:author/text()', namespaces=ns)[0]
         liste_titre.append({
-            "Fichier":file,
+            "Fichier": file,
             "Titre": titre,
             "Auteur": auteur
         })
@@ -311,10 +311,3 @@ def affichage_auteur(doc):
     # re.findall permet de trouver toutes les occurences du motif recherché, on en conserve ainsi que le premier
     nom = re.findall("([A-Za-z]+)", doc)[0]
     return "/static/images/" + nom + ".jpg"
-
-
-
-
-
-
-
