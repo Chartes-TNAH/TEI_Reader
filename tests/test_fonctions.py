@@ -25,5 +25,17 @@ class TestDecompte(unittest.TestCase):
         actual = decompte([])
         self.assertDictEqual(actual, {})
 
+
+class TestPresenter(unittest.TestCase):
+    def test_Presenter(self):
+        doc = "Doc_test.xml"
+        chemin_actuel = os.path.dirname(os.path.abspath(__file__))
+        doc = etree.parse(os.path.join(chemin_actuel, doc))
+        actual = presenter(doc)
+        self.assertDictEqual(actual, {'Auteur': 'Alexandre Bartz', 'Date': '2020', 'Editeur': 'Oxygen',
+                                      'Editeur_papier': 'Github', 'Lignes': '2', 'Personnages': ['Molière'],
+                                      'Titre': 'Document test', 'Ville': 'Paris'})
+
+
 if __name__ == '__main__':
     unittest.main()
