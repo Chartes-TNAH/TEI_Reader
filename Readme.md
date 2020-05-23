@@ -21,4 +21,5 @@ Pour lancer les tests qui vérifieront le bon fonctionnement des fonctions utili
 
 ## Crédits
 * Les portraits sont issus de [Wikipedia](https://www.wikipedia.org/)
-* Le corpus utilisé a été fourni par [Simon Gabay](https://github.com/gabays), je le remercie tout particulièrement.
+* Les textes sont sous la licence suivante : Attribution 4.0 International (CC BY 4.0).application
+Ce corpus a été fourni par [Simon Gabay](https://github.com/gabays), je le remercie tout particulièrement.
