@@ -1,31 +1,31 @@
-# Ce module permet de lister tous les fichiers d'un dossier
+# Ce module permet de lister tous les fichiers d'un dossier.
 import glob
 
-# Ce module permet d'utiliser des expressions régulières en python
+# Ce module permet d'utiliser des expressions régulières en python.
 import re
 
-# Ce module petmet d'accéder au système de fichiers
+# Ce module petmet d'accéder au système de fichiers.
 import os
 
-# Cette librairie permet de parser du XML en python
+# Cette librairie permet de parser du XML en python.
 from lxml import etree
 
-# Cette librairie sera utile pour analyser les textes, j'y ajoute cependant encore quelques "stop words" qui ne me
-# semblent pas pertinents pour l'analyse textuelle que je propose
+# Cette librairie est utile pour analyser les textes, j'y ajoute cependant encore quelques "stop words" qui ne me
+# semblent pas pertinents pour l'analyse textuelle que je propose.
 from stop_words import get_stop_words
 stop_words = get_stop_words('fr')
 stop_words.extend(["jai", "d", "", "quil", "cest", "dun", "sil", "quun", "quune", "quon", "dune", "nest", "oui", "non",
                    "lon", "jen", "quà", "men", "quen", "jy", "na", "peutetre", "peutêtre", "nen", "lautre", "toute",
                    "plus", "va"])
 
-# Dès qu'on utilise du XPath, il est nécessaire de préciser le namespace, on le met donc dans une variable
+# Dès qu'on utilise du XPath, il est nécessaire de préciser le namespace, on le met donc dans une variable.
 ns = {'tei': 'http://www.tei-c.org/ns/1.0'}
 
 # Fonctions servant à la mise en place des index :
 
 
 def normaliser_nom(mot):
-    """Cette fonction permet de normaliser les noms de personnages ou de lieux en retirant les marques de ponctuation
+    """ Cette fonction permet de normaliser les noms de personnages ou de lieux en retirant les marques de ponctuation.
 
     :param mot: une chaîne de caractères
     :return: nom normalisé
@@ -39,7 +39,7 @@ def normaliser_nom(mot):
 
 
 def index_personnages(doc):
-    """ Fonction qui permet d'obtenir un index des personnages
+    """ Fonction qui permet d'obtenir un index des personnages.
 
     :param doc: un chemin de fichier
     :return: un dictionnaire ayant pour clefs les noms de personnages et pour valeurs une liste avec les occurences
@@ -52,9 +52,9 @@ def index_personnages(doc):
 
     ligne_precedente = None
     for ligne in lignes:
-        # Pour chaque ligne dotée d'un attribut 'n', on récupère sa valeur. Ce if est nécessaire puisque certaine
-        # ligne, notamment les stichomyties, ont uniquement un attribut 'part' : on récupère donc le numéro de
-        # la ligne précédente.
+        """ Pour chaque ligne dotée d'un attribut 'n', on récupère sa valeur. Ce if est nécessaire puisque certaine
+        ligne, notamment les stichomyties, ont uniquement un attribut 'part' : on récupère donc le numéro de
+        la ligne précédente. """
         if ligne.get("n"):
             numero_de_ligne = ligne.get("n")
         else:
@@ -75,7 +75,7 @@ def index_personnages(doc):
 
 
 def index_lieux(doc):
-    """ Fonction qui permet d'obtenir un index des lieux
+    """ Fonction qui permet d'obtenir un index des lieux.
 
        :param doc: un chemin de fichier
        :return: un dictionnaire ayant pour clefs les noms de lieux et pour valeurs une liste avec les occurences
@@ -110,7 +110,7 @@ def index_lieux(doc):
     return index
 
 
-# Fonction permet de générer la table des matières
+# Fonction permet de générer la table des matières :
 
 def table_des_matieres(doc):
     """ Fonction qui permet d'obtenir une table des matières de chaque document
@@ -161,20 +161,27 @@ def table_des_matieres(doc):
     return tdm
 
 
-# Fonctions qui permettent de présenter le document
+# Fonctions qui permettent de présenter le document :
 
 def remove_element(el):
     """
     Fonction qui permet de supprimer un élément dans l'arbre XML sans supprimer pour autant le texte qui suit
     :param el: un élément xml
     """
+    # On commence par récupérer l'élément parent.
     parent = el.getparent()
+    # Si cet élément contient du texte et que le texte n'est pas nul :
     if el.tail and el.tail.strip():
+        # On récupère l'élément précédent.
         prev = el.getprevious()
+        # S'il y en a un :
         if prev:
+            # On concatène la "tail" de l'élément précédent avec celle de l'élément à supprimer.
             prev.tail = (prev.tail or '') + el.tail
         else:
+            # On ajoute la "tail" de l'élément à supprimer au texte de l'élément parent.
             parent.text = (parent.text or '') + el.tail
+    # On supprime ensuite l'élément entré en paramètre.
     parent.remove(el)
 
 
@@ -251,7 +258,7 @@ def corpus():
     return liste_titre
 
 
-# Fonctions servant à l'analyse du texte
+# Fonctions servant à l'analyse du texte :
 
 def normalisation(mot):
     """

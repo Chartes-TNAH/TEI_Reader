@@ -13,13 +13,13 @@
 <div class="marging">
     <h2>Corpus</h2>
     <p>
-<ul class="list-group list-group-flush">
-    {% for fichier in liste %}
-    <li class="list-group-item"> <a href="{{ fichier.Fichier }}/Presentation">
-        {{ fichier.Titre }}
-        <small class="text-muted">de {{fichier.Auteur}} </small></a></li>
-    {% endfor %}
-</ul>
+        <ul class="list-group list-group-flush">
+        {% for fichier in liste %}
+            <li class="list-group-item"> <a href="{{ fichier.Fichier }}/Presentation">
+                {{ fichier.Titre }}
+                <small class="text-muted">de {{fichier.Auteur}} </small></a></li>
+        {% endfor %}
+        </ul>
     </p>
 </div>
 </div>

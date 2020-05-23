@@ -5,6 +5,9 @@ from .fonctions import *
 # lxml est la librairie permettant de traiter du XML en python
 from lxml import etree
 
+""" Ce fichier contient les différentes routes de mon application, elles prennent toutes, exceptée la page d'accueil,
+un document issu du corpus en paramètre. """
+
 
 @app.route("/")
 def accueil():
@@ -41,6 +44,7 @@ def texte(document):
     transform = etree.XSLT(xslt)
     doc = ouvrir_doc(document)
     return str(transform(doc))
+
 
 @app.route("/<document>/Analyse_oeuvre")
 def analyse_doc(document):

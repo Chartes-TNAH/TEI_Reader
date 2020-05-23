@@ -1,10 +1,14 @@
+# Cette librairie permet de procéder à des tests unitaires.
 import unittest
+# J'importe l'ensemble des fonctions afin de pouvoir les tester.
 from TEI_Reader.fonctions import *
 
 
 class TestNormaliserNom(unittest.TestCase):
     def test_capitalize(self):
         actual = normaliser_nom("paris")
+        # On vérifie que le texte contenu dans la variable est bien normalisé ;
+        # une erreur apparaît si ce n'est pas le cas.
         self.assertEqual(actual, "Paris")
 
     def test_ponctuation(self):
