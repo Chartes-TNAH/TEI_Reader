@@ -16,7 +16,7 @@ Pour lancer cette application, il vous suffit de :
 
 ## Lancement des tests unitaires
 Pour lancer les tests qui vérifieront le bon fonctionnement des fonctions utilisées par l'application, vous devez, une fois l'environnement virtuel activé, utiliser la commande suivante depuis `application` :
-`python -m unittest tests/test_fonctions.py`
+* `python -m unittest tests/test_fonctions.py`
 
 ## Crédits
 * Les portraits sont issus de [Wikipedia](https://www.wikipedia.org/)
