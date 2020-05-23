@@ -9,7 +9,7 @@ La librairie lxml a été utilisée pour lire les oeuvres.
 ## Lancement de l'application
 Pour lancer cette application, il vous suffit de :
 * créer un environnement virtuel avec `virtualenv -p python3 venv`
-* activer l'environnement avec `source venv/bin/activate
+* activer l'environnement avec `source venv/bin/activate`
 * cloner ce *repository*
 * vérifier que vous disposez des librairies nécessaires au bon fonctionnement de l'application (Il est possible d'utiliser la commande `pip install -r requirements.txt`)
 * lancer le fichier run.py avec la commande :  `python run.py`.
