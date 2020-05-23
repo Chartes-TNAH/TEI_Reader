@@ -8,6 +8,7 @@ La librairie lxml a été utilisée pour lire les oeuvres.
 
 ## Lancement de l'application
 Pour lancer cette application, il vous suffit de :
+* installer, si ce n'est pas déjà fait `virtualenv` avec `pip install virtualenv` (cette bibliothèque permet de créer des environnements virtuels)
 * créer un environnement virtuel avec `virtualenv -p python3 venv`
 * activer l'environnement avec `source venv/bin/activate`
 * cloner ce *repository*
