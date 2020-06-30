@@ -23,6 +23,15 @@ ns = {'tei': 'http://www.tei-c.org/ns/1.0'}
 
 # Fonctions servant à la mise en place des index :
 
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+CORPORA = {}
+with open(os.path.join(ROOT_DIR, "data", "corpus_list.xml")) as f:
+    xml = etree.parse(f)
+    for corp in xml.xpath("//corpus"):
+        file = corp.attrib["path"]
+        corpus_id = corp.attrib["id"].strip()
+        CORPORA[corpus_id] = file
+
 
 def normaliser_nom(mot):
     """ Cette fonction permet de normaliser les noms de personnages ou de lieux en retirant les marques de ponctuation.
@@ -224,15 +233,15 @@ def presenter(doc):
     }
 
 
-def ouvrir_doc(document):
+def ouvrir_doc(file_id):
     """
     Cette fonction permet d'ouvrir un document
 
-    :param document: un chemin de fichier
+    :param file_id: ID d'un fichier présent dans corpus_list.xml4
     :return: le même fichier parsé par etree
     """
     chemin_actuel = os.path.dirname(os.path.abspath(__file__))
-    return etree.parse(os.path.join(chemin_actuel, "data", document))
+    return etree.parse(os.path.join(chemin_actuel, "data", CORPORA[file_id]))
 
 
 def corpus():
@@ -242,16 +251,13 @@ def corpus():
     :return: liste de dictionnaires (un dictionnaire par oeuvre, contenant le nom du fichier, le titre et l'auteur)
     :rtype: list
     """
-    files = glob.glob("TEI_Reader/data/*")
-    files.sort()
     liste_titre = []
-    for file in files:
-        file = file.replace("TEI_Reader/data/", "")
-        doc = ouvrir_doc(file)
+    for corpus_id, file in CORPORA.items():
+        doc = ouvrir_doc(corpus_id)
         titre = doc.xpath('//tei:titleStmt/tei:title/text()', namespaces=ns)[0]
         auteur = doc.xpath('//tei:titleStmt/tei:author/text()', namespaces=ns)[0]
         liste_titre.append({
-            "Fichier": file,
+            "Fichier": corpus_id,
             "Titre": titre,
             "Auteur": auteur
         })
