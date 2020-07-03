@@ -1,5 +1,5 @@
 # Ce module permet de lister tous les fichiers d'un dossier.
-import glob
+from flask import url_for
 
 # Ce module permet d'utiliser des expressions régulières en python.
 import re
@@ -323,4 +323,4 @@ def affichage_auteur(doc):
     doc = str(doc)
     # re.findall permet de trouver toutes les occurences du motif recherché, on en conserve ainsi que le premier
     nom = re.findall("([A-Za-z]+)", doc)[0]
-    return "/static/images/" + nom + ".jpg"
+    return url_for("static",  filename="images/" + nom + ".jpg")
