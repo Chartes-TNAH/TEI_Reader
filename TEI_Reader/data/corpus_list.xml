@@ -1,0 +1,11 @@
+<corpora>
+	<corpus path="Campistron_Achille.xml" id="Campistron_Achille"/>
+	<corpus path="Campistron_Arminius.xml" id="Campistron_Arminius"/>
+	<corpus path="Moliere_DomGarcie.xml" id="Moliere_DomGarcie"/>
+	<corpus path="Moliere_EcoleFemmes.xml" id="Moliere_EcoleFemmes"/>
+	<corpus path="Pradon_Scipion.xml" id="Pradon_Scipion"/>
+	<corpus path="Pradon_Statira.xml" id="Pradon_Statira"/>
+	<corpus path="Racine_Andromaque.xml" id="Racine_Andromaque"/>
+	<corpus path="Racine_Berenice.xml" id="Racine_Berenice"/>
+	<corpus path="Racine_Plaideurs.xml" id="Racine_Plaideurs"/>
+</corpora>

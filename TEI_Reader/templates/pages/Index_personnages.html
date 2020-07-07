@@ -9,7 +9,7 @@
         <p class="index_entree">{{ personnage }} :</p>
         <p class="index_numeros">
             {% for numero in numeros %}
-            <a href="Texte#{{ numero }}">{{ numero }}</a>
+            <a href="{{url_for("texte", document=document_id)}}#{{ numero }}">{{ numero }}</a>
             {% endfor %}
         </p>
     </li>
